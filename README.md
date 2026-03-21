@@ -49,9 +49,38 @@ npm run dev
 | Frontend | Next.js 14 + TypeScript + TailwindCSS |
 | Containerization | Docker + Docker Compose |
 
+## Training Results
+
+### Dataset
+- **Financial PhraseBank** (2,264 samples) + **FiQA** (1,111 samples) = **3,375 total**
+- Split: Train 2,700 / Val 337 / Test 338 (stratified 80/10/10)
+
+### Model Comparison
+
+| Metric | FinBERT + LoRA | distilBERT + LoRA |
+|--------|:---:|:---:|
+| **F1 Macro** | **0.8976** | 0.8724 |
+| **Accuracy** | **91.1%** | 88.8% |
+| Latency (p50) | 9.93 ms | **5.51 ms** |
+| Model Size | 417.7 MB | **255.4 MB** |
+| Trainable Params | 592K (0.54%) | 1.18M (1.74%) |
+| Edge Cases | **6/6** | **6/6** |
+| Training Time | 82s | **65s** |
+
+**Winner: FinBERT + LoRA** - Domain-specific pre-training provides superior F1 despite fewer trainable parameters.
+
+### Edge Case Results (Both models: 6/6)
+- "The company maintained its dividend" -> neutral
+- "Revenue increased but margins declined sharply" -> negative
+- "EPS $2.45 vs $2.30 expected, revenue $12.1B vs $11.8B consensus" -> positive
+- "$TSLA to the moon" -> positive
+- "The board will meet on Tuesday to discuss Q2 results" -> neutral
+- "Shares dropped 15% after disappointing guidance" -> negative
+
 ## Project Status
 
-**Phase 1 - In Progress:** Data & Training Foundation
+**Phase 1 - Complete:** Data & Training Foundation
+**Phase 2 - Complete:** Model Comparison & Evaluation
 
 See [CLAUDE.md](CLAUDE.md) for detailed architecture and implementation plan.
 
