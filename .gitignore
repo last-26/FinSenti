@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# PyTorch / ML
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# HuggingFace cache
+cache/
+training/cache/
+
+# MLflow
+mlflow/
+mlruns/
+
+# Training outputs
+training/outputs/
+training/checkpoints/
+
+# SQLite
+*.db
+*.sqlite3
+
+# Node.js
+node_modules/
+.next/
+out/
+frontend/.next/
+frontend/node_modules/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Coverage
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Ruff
+.ruff_cache/
+
+# Memory (Claude Code)
+.claude/
