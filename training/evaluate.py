@@ -259,7 +259,7 @@ def main() -> None:
     print(f"  Passed: {passed}/{len(edge_results)}")
     for r in edge_results:
         status = "PASS" if r["passed"] else "FAIL"
-        print(f"  [{status}] '{r['text'][:50]}...' → {r['predicted']} ({r['confidence']:.2f}), expected: {r['expected']}")
+        print(f"  [{status}] '{r['text'][:50]}...' ->{r['predicted']} ({r['confidence']:.2f}), expected: {r['expected']}")
 
     # 5. Model size
     total_params = sum(p.numel() for p in model.parameters())
