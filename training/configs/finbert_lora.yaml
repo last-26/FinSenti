@@ -1,0 +1,37 @@
+base_model: "ProsusAI/finbert"
+num_labels: 3
+label_names:
+  - negative
+  - neutral
+  - positive
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  target_modules: ["query", "value"]
+  task_type: "SEQ_CLS"
+
+training:
+  epochs: 5
+  batch_size: 16
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_length: 128
+  fp16: true
+  gradient_accumulation_steps: 2
+  output_dir: "./outputs/finbert-lora"
+  logging_steps: 50
+  save_strategy: "epoch"
+  seed: 42
+
+eval:
+  eval_strategy: "epoch"
+  metric_for_best_model: "f1_macro"
+  load_best_model_at_end: true
+
+mlflow:
+  experiment_name: "finsenti-finbert"
+  tracking_uri: "http://localhost:5000"
+  run_name: "finbert-lora"
