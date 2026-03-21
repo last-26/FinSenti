@@ -8,7 +8,7 @@ This project demonstrates the **full ML lifecycle**: data preparation → fine-t
 
 **Core Problem:** Given a financial text (news headline, tweet, analyst statement), classify the sentiment as **positive**, **negative**, or **neutral** with a confidence score, and extract key financial entities.
 
-**Current Status (March 2026):** Project scaffolded. Ready for Phase 1 development.
+**Current Status (March 2026):** Phase 1 & 2 complete. Training done, models evaluated. Phase 3 (backend integration) next.
 
 ---
 
@@ -407,30 +407,32 @@ EDGE_CASES = [
 
 ## Implementation Phases
 
-### Phase 1: Data & Training Foundation
-- [ ] Project scaffolding
-- [ ] `data/prepare_dataset.py`
-- [ ] Training config YAMLs
-- [ ] `train.py` — LoRA + MLflow logging
-- [ ] `evaluate.py` — metrics + confusion matrix
-- [ ] Docker Compose with MLflow
-- [ ] Train FinBERT + LoRA
+### Phase 1: Data & Training Foundation ✅
+- [x] Project scaffolding
+- [x] `data/prepare_dataset.py` — downloads FPB zip + FiQA, merges, stratified split (3,375 samples)
+- [x] Training config YAMLs
+- [x] `train.py` — LoRA + MLflow logging (local file store fallback)
+- [x] `evaluate.py` — metrics + confusion matrix + latency + edge cases
+- [x] Docker Compose with MLflow
+- [x] Train FinBERT + LoRA — **F1: 0.8976, Acc: 91.1%**
 
-### Phase 2: Model Comparison & Registry
-- [ ] Train distilBERT + LoRA
-- [ ] `compare_models.py`
-- [ ] `register_model.py`
-- [ ] Edge case evaluation
-- [ ] Document results in README
+### Phase 2: Model Comparison & Registry ✅
+- [x] Train distilBERT + LoRA — **F1: 0.8724, Acc: 88.8%**
+- [x] `compare_models.py`
+- [x] `register_model.py`
+- [x] Edge case evaluation — **6/6 both models**
+- [x] Document results in README
 
-### Phase 3: Inference API
-- [ ] FastAPI backend
-- [ ] Inference engine
-- [ ] Preprocessing + postprocessing
-- [ ] `/predict` and `/batch` endpoints
-- [ ] `/models` and `/experiments` endpoints
-- [ ] Prediction logging
-- [ ] Tests
+### Phase 3: Inference API (code written, needs testing)
+- [x] FastAPI backend (code)
+- [x] Inference engine (code)
+- [x] Preprocessing + postprocessing (code)
+- [x] `/predict` and `/batch` endpoints (code)
+- [x] `/models` and `/experiments` endpoints (code)
+- [x] Prediction logging (code)
+- [ ] Backend venv setup + run server
+- [ ] Integration testing with trained adapter
+- [ ] Unit tests
 
 ### Phase 4: Frontend
 - [ ] Next.js setup
