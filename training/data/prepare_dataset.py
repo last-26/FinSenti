@@ -7,12 +7,14 @@ Saves processed datasets to ./data/processed/ as HuggingFace Dataset.
 
 from __future__ import annotations
 
+import io
 import os
-import sys
+import zipfile
 from pathlib import Path
 
 import numpy as np
 from datasets import Dataset, DatasetDict, load_dataset
+from huggingface_hub import hf_hub_download
 from sklearn.model_selection import train_test_split
 
 # Label mapping: 0=negative, 1=neutral, 2=positive
@@ -22,20 +24,47 @@ OUTPUT_DIR = Path(__file__).parent / "processed"
 
 
 def load_financial_phrasebank() -> list[dict]:
-    """Load Financial PhraseBank (sentences_allagree subset)."""
+    """Load Financial PhraseBank (sentences_allagree subset).
+
+    Downloads the zip from HuggingFace Hub and parses the raw text file
+    since the dataset's loading script is no longer supported.
+    """
     print("Loading Financial PhraseBank...")
-    ds = load_dataset(
-        "financial_phrasebank",
-        "sentences_allagree",
-        trust_remote_code=True,
+    zip_path = hf_hub_download(
+        repo_id="financial_phrasebank",
+        filename="data/FinancialPhraseBank-v1.0.zip",
+        repo_type="dataset",
     )
+
+    # Label mapping in the raw file: negative=0, neutral=1, positive=2
+    fpb_label_map = {"negative": 0, "neutral": 1, "positive": 2}
+    target_file = "Sentences_AllAgree.txt"
+
     records = []
-    for row in ds["train"]:
-        records.append({
-            "text": row["sentence"].strip(),
-            "label": int(row["label"]),  # already 0,1,2
-            "source": "financial_phrasebank",
-        })
+    with zipfile.ZipFile(zip_path) as zf:
+        # Find the target file in the zip
+        matching = [n for n in zf.namelist() if target_file in n]
+        if not matching:
+            raise FileNotFoundError(f"{target_file} not found in zip: {zf.namelist()}")
+
+        with zf.open(matching[0]) as f:
+            for line in io.TextIOWrapper(f, encoding="utf-8", errors="replace"):
+                line = line.strip()
+                if not line:
+                    continue
+                # Format: "sentence text@label"
+                if "@" not in line:
+                    continue
+                text, label_str = line.rsplit("@", 1)
+                label_str = label_str.strip().lower()
+                if label_str not in fpb_label_map:
+                    continue
+                records.append({
+                    "text": text.strip(),
+                    "label": fpb_label_map[label_str],
+                    "source": "financial_phrasebank",
+                })
+
     print(f"  Loaded {len(records)} samples from Financial PhraseBank")
     return records
 
@@ -43,7 +72,7 @@ def load_financial_phrasebank() -> list[dict]:
 def load_fiqa() -> list[dict]:
     """Load FiQA 2018 sentiment dataset and bin scores to 3 classes."""
     print("Loading FiQA Sentiment...")
-    ds = load_dataset("pauri32/fiqa-2018", trust_remote_code=True)
+    ds = load_dataset("pauri32/fiqa-2018")
 
     records = []
     for split_name in ds:

@@ -127,9 +127,18 @@ def main() -> None:
         remove_unused_columns=False,
     )
 
-    # MLflow setup
+    # MLflow setup — use local file store if server unreachable
     mlflow_cfg = config["mlflow"]
-    mlflow.set_tracking_uri(mlflow_cfg["tracking_uri"])
+    tracking_uri = mlflow_cfg["tracking_uri"]
+    try:
+        import urllib.request
+        resp = urllib.request.urlopen(f"{tracking_uri}/api/2.0/mlflow/experiments/search", timeout=3)
+        resp.read()
+    except Exception:
+        mlruns_path = Path(__file__).parent / "mlruns"
+        tracking_uri = mlruns_path.as_uri()
+        print(f"MLflow server not available, using local store: {tracking_uri}")
+    mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(mlflow_cfg["experiment_name"])
 
     with mlflow.start_run(run_name=mlflow_cfg["run_name"]) as run:
