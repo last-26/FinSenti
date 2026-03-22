@@ -8,7 +8,7 @@ This project demonstrates the **full ML lifecycle**: data preparation → fine-t
 
 **Core Problem:** Given a financial text (news headline, tweet, analyst statement), classify the sentiment as **positive**, **negative**, or **neutral** with a confidence score, and extract key financial entities.
 
-**Current Status (March 2026):** Phases 1–3 complete. Training done, models evaluated, inference API tested and serving. Phase 4 (frontend) next.
+**Current Status (March 2026):** Phases 1–4 complete. Full pipeline working: training, evaluation, API serving, frontend UI. Phase 5 (polish & DevOps) next.
 
 ---
 
@@ -435,14 +435,16 @@ EDGE_CASES = [
 - [x] Unit tests — **32 tests passing** (endpoints, preprocessing, postprocessing)
 - [x] Ruff lint clean
 
-### Phase 4: Frontend
-- [ ] Next.js setup
-- [ ] Predict page with sentiment gauge
-- [ ] Batch page
-- [ ] Dashboard
-- [ ] Experiments page
-- [ ] Model comparison page
-- [ ] History page
+### Phase 4: Frontend ✅
+- [x] Next.js 14 (App Router) + TypeScript + TailwindCSS setup
+- [x] Layout with navigation header + API client library
+- [x] Dashboard page — API status, active model, quick actions, recent predictions
+- [x] Predict page — text input with examples, sentiment gauge, entity tags, market signal
+- [x] Batch page — multi-text input, summary cards, results table
+- [x] Experiments page — MLflow experiment selector, runs metrics table
+- [x] Models page — model cards with switch capability
+- [x] History page — paginated prediction history table
+- [x] Build verified — zero errors
 
 ### Phase 5: Polish & DevOps
 - [ ] CI/CD pipeline
