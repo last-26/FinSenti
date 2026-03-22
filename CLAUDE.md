@@ -8,7 +8,7 @@ This project demonstrates the **full ML lifecycle**: data preparation → fine-t
 
 **Core Problem:** Given a financial text (news headline, tweet, analyst statement), classify the sentiment as **positive**, **negative**, or **neutral** with a confidence score, and extract key financial entities.
 
-**Current Status (March 2026):** Phase 1 & 2 complete. Training done, models evaluated. Phase 3 (backend integration) next.
+**Current Status (March 2026):** Phases 1–3 complete. Training done, models evaluated, inference API tested and serving. Phase 4 (frontend) next.
 
 ---
 
@@ -423,16 +423,17 @@ EDGE_CASES = [
 - [x] Edge case evaluation — **6/6 both models**
 - [x] Document results in README
 
-### Phase 3: Inference API (code written, needs testing)
-- [x] FastAPI backend (code)
-- [x] Inference engine (code)
-- [x] Preprocessing + postprocessing (code)
-- [x] `/predict` and `/batch` endpoints (code)
-- [x] `/models` and `/experiments` endpoints (code)
-- [x] Prediction logging (code)
-- [ ] Backend venv setup + run server
-- [ ] Integration testing with trained adapter
-- [ ] Unit tests
+### Phase 3: Inference API ✅
+- [x] FastAPI backend with lifespan model loading
+- [x] Inference engine (base model + LoRA adapter merge)
+- [x] Preprocessing (text cleaning, entity extraction) + postprocessing
+- [x] `/predict` and `/batch` endpoints with SQLite logging
+- [x] `/models`, `/experiments`, `/history`, `/health` endpoints
+- [x] MLflow experiments with local mlruns fallback
+- [x] Backend venv setup + server verified on trained FinBERT adapter
+- [x] Integration testing — all endpoints verified with real model
+- [x] Unit tests — **32 tests passing** (endpoints, preprocessing, postprocessing)
+- [x] Ruff lint clean
 
 ### Phase 4: Frontend
 - [ ] Next.js setup
