@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import APIRouter, HTTPException
 
 from app.config import settings
@@ -11,9 +13,25 @@ router = APIRouter()
 
 
 def _get_mlflow_client():
+    """Get MLflow client, falling back to local mlruns if server is unavailable."""
     import mlflow
-    mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
-    return mlflow.tracking.MlflowClient()
+
+    # Try remote tracking server first
+    try:
+        mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
+        client = mlflow.tracking.MlflowClient()
+        client.search_experiments(max_results=1)
+        return client
+    except Exception:
+        pass
+
+    # Fallback to local mlruns directory
+    mlruns_path = Path(settings.mlruns_dir)
+    if mlruns_path.exists():
+        mlflow.set_tracking_uri(mlruns_path.resolve().as_uri())
+        return mlflow.tracking.MlflowClient()
+
+    raise ConnectionError("MLflow server unavailable and no local mlruns directory found")
 
 
 @router.get("/experiments")

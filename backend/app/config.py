@@ -22,6 +22,7 @@ class Settings(BaseSettings):
 
     # MLflow
     mlflow_tracking_uri: str = "http://localhost:5000"
+    mlruns_dir: str = "../training/mlruns"
 
     # Model
     default_model: str = "finbert-lora"
