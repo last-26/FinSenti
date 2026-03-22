@@ -10,7 +10,6 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
-import numpy as np
 import torch
 from peft import PeftConfig, PeftModel
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -99,7 +98,6 @@ class SentimentEngine:
             raise RuntimeError("No model loaded. Call load_from_adapter() first.")
 
         results = []
-        total_start = time.perf_counter()
 
         for i in range(0, len(texts), batch_size):
             batch_texts = texts[i : i + batch_size]

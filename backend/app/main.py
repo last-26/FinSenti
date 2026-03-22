@@ -63,7 +63,7 @@ app.add_middleware(
 )
 
 # Register routes
-from app.api.routes import batch, experiments, health, history, models, predict
+from app.api.routes import batch, experiments, health, history, models, predict  # noqa: E402
 
 app.include_router(health.router, prefix=settings.api_prefix, tags=["health"])
 app.include_router(predict.router, prefix=settings.api_prefix, tags=["predict"])
