@@ -24,9 +24,11 @@ services:
       - DATABASE_URL=sqlite+aiosqlite:///./predictions.db
       - DEFAULT_MODEL=finbert-lora
       - MODEL_DIR=/app/models
+      - MLRUNS_DIR=/app/mlruns
     volumes:
       - hf-cache:/app/cache/huggingface
-      - model-data:/app/models
+      - ./training/outputs:/app/models:ro
+      - ./training/mlruns:/app/mlruns:ro
     depends_on:
       - mlflow
 
@@ -34,14 +36,13 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
     depends_on:
       - backend
 
 volumes:
   mlflow-data:
   hf-cache:
-  model-data:
