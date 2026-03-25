@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
 from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.inference.postprocessing import format_prediction
 from app.inference.preprocessing import extract_entities
@@ -39,9 +41,37 @@ def mock_engine() -> MagicMock:
 
 @pytest.fixture()
 def client(mock_engine: MagicMock) -> TestClient:
-    """TestClient with mocked engine — no real model loading."""
+    """TestClient with mocked engine and in-memory DB."""
+    from app.database import Base, get_session
     from app.main import app
 
-    # Override the lifespan by directly setting app state
+    # Use in-memory SQLite for tests
+    test_engine = create_async_engine("sqlite+aiosqlite://", echo=False)
+    test_session_factory = async_sessionmaker(
+        test_engine, class_=AsyncSession, expire_on_commit=False
+    )
+
+    # Create tables
+    asyncio.get_event_loop_policy().new_event_loop()
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(_create_tables(test_engine, Base))
+    loop.close()
+
+    # Override DB session dependency
+    async def _override_get_session():
+        async with test_session_factory() as session:
+            yield session
+
+    app.dependency_overrides[get_session] = _override_get_session
     app.state.engine = mock_engine
-    return TestClient(app, raise_server_exceptions=False)
+
+    client = TestClient(app, raise_server_exceptions=False)
+    yield client
+
+    # Cleanup
+    app.dependency_overrides.clear()
+
+
+async def _create_tables(engine, base):
+    async with engine.begin() as conn:
+        await conn.run_sync(base.metadata.create_all)
