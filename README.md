@@ -1,10 +1,10 @@
 # FinSenti - Financial Sentiment Analysis MLOps Pipeline
+
+An end-to-end MLOps pipeline for financial sentiment analysis. Fine-tunes FinBERT and distilBERT with LoRA adapters, tracks experiments with MLflow, and serves predictions via FastAPI + Next.js.
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![CI](https://github.com/last-26/FinSenti/actions/workflows/ci.yml/badge.svg)
-An end-to-end MLOps pipeline for financial sentiment analysis. Fine-tunes FinBERT and distilBERT with LoRA adapters, tracks experiments with MLflow, and serves predictions via FastAPI + Next.js.
-
 ## Features
 
 - **LoRA Fine-tuning** of FinBERT and distilBERT on financial text data
