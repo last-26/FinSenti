@@ -17,12 +17,13 @@ import time
 from pathlib import Path
 
 import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import mlflow
 import numpy as np
 import seaborn as sns
 import torch
+
+matplotlib.use("Agg")
 from datasets import load_from_disk
 from peft import PeftModel
 from sklearn.metrics import (
@@ -197,8 +198,12 @@ def main() -> None:
     parser.add_argument("--run-id", help="MLflow run ID to load model from")
     parser.add_argument("--adapter-dir", help="Direct path to adapter directory")
     parser.add_argument("--data-dir", default="./data/processed", help="Path to processed dataset")
-    parser.add_argument("--tracking-uri", default="http://localhost:5000", help="MLflow tracking URI")
-    parser.add_argument("--output-dir", default="./outputs/eval", help="Directory for evaluation outputs")
+    parser.add_argument(
+        "--tracking-uri", default="http://localhost:5000", help="MLflow tracking URI"
+    )
+    parser.add_argument(
+        "--output-dir", default="./outputs/eval", help="Directory for evaluation outputs"
+    )
     args = parser.parse_args()
 
     if not args.run_id and not args.adapter_dir:
@@ -259,7 +264,9 @@ def main() -> None:
     print(f"  Passed: {passed}/{len(edge_results)}")
     for r in edge_results:
         status = "PASS" if r["passed"] else "FAIL"
-        print(f"  [{status}] '{r['text'][:50]}...' ->{r['predicted']} ({r['confidence']:.2f}), expected: {r['expected']}")
+        text_preview = r["text"][:50]
+        pred, conf, exp = r["predicted"], r["confidence"], r["expected"]
+        print(f"  [{status}] '{text_preview}...' ->{pred} ({conf:.2f}), expected: {exp}")
 
     # 5. Model size
     total_params = sum(p.numel() for p in model.parameters())
@@ -282,7 +289,7 @@ def main() -> None:
             mlflow.log_artifact(str(cm_path))
             mlflow.log_artifact(str(report_path))
 
-    print(f"\n--- Summary ---")
+    print("\n--- Summary ---")
     print(f"F1 Macro: {f1_macro:.4f}")
     print(f"F1 Micro: {f1_micro:.4f}")
     print(f"Accuracy: {accuracy:.4f}")

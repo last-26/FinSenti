@@ -163,7 +163,7 @@ def merge_and_split(
         "test": make_dataset(test_texts, test_labels, test_sources),
     })
 
-    print(f"\nSplit sizes:")
+    print("\nSplit sizes:")
     for split_name, split_ds in dataset_dict.items():
         print(f"  {split_name}: {len(split_ds)}")
 

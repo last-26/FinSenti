@@ -132,7 +132,8 @@ def main() -> None:
     tracking_uri = mlflow_cfg["tracking_uri"]
     try:
         import urllib.request
-        resp = urllib.request.urlopen(f"{tracking_uri}/api/2.0/mlflow/experiments/search", timeout=3)
+        url = f"{tracking_uri}/api/2.0/mlflow/experiments/search"
+        resp = urllib.request.urlopen(url, timeout=3)
         resp.read()
     except Exception:
         mlruns_path = Path(__file__).parent / "mlruns"
