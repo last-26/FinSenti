@@ -8,7 +8,7 @@ This project demonstrates the **full ML lifecycle**: data preparation → fine-t
 
 **Core Problem:** Given a financial text (news headline, tweet, analyst statement), classify the sentiment as **positive**, **negative**, or **neutral** with a confidence score, and extract key financial entities.
 
-**Current Status (March 2026):** Phases 1–4 complete. Full pipeline working: training, evaluation, API serving, frontend UI. Phase 5 (polish & DevOps) next.
+**Current Status (March 2026):** All phases (1–5) complete. Full pipeline working: training, evaluation, API serving, frontend UI, CI/CD, Docker deployment, benchmarks.
 
 ---
 
@@ -446,11 +446,11 @@ EDGE_CASES = [
 - [x] History page — paginated prediction history table
 - [x] Build verified — zero errors
 
-### Phase 5: Polish & DevOps
-- [ ] CI/CD pipeline
-- [ ] Full Docker Compose
-- [ ] README with results + screenshots
-- [ ] Latency benchmarks
+### Phase 5: Polish & DevOps ✅
+- [x] CI/CD pipeline — GitHub Actions with lint, test, build, Docker (caching + concurrency)
+- [x] Full Docker Compose — health checks, restart policies, dependency ordering, CORS config
+- [x] README with results + architecture + API docs + deployment guide
+- [x] Latency benchmarks — `backend/benchmark.py` for single & batch endpoints
 
 ---
 
@@ -475,6 +475,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 pytest -v
 ruff check .
+python benchmark.py --url http://localhost:8000 --rounds 50
 ```
 
 ### Frontend
