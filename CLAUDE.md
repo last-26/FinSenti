@@ -151,10 +151,10 @@ FiQA Sentiment (~1,100 sentences)
 
 ### Combined Dataset Split
 ```
-Total: ~5,940 samples
-├── Train: ~4,750 (80%)
-├── Validation: ~595 (10%)
-└── Test: ~595 (10%)
+Total: 3,375 samples (after filtering and deduplication)
+├── Train: 2,700 (80%)
+├── Validation: 337 (10%)
+└── Test: 338 (10%)
 ```
 
 ---
@@ -177,6 +177,7 @@ FinSenti/
 │   ├── configs/
 │   │   ├── finbert_lora.yaml
 │   │   └── distilbert_lora.yaml
+│   ├── pyproject.toml                 # Ruff config
 │   ├── train.py                       # ★ LoRA fine-tuning + MLflow
 │   ├── evaluate.py                    # ★ Evaluation suite
 │   ├── compare_models.py             # Compare runs
@@ -206,7 +207,8 @@ FinSenti/
 │   │   └── schemas/
 │   │       ├── predict.py
 │   │       └── experiment.py
-│   └── tests/
+│   ├── tests/
+│   └── benchmark.py                   # API latency benchmark
 │
 ├── frontend/
 │   ├── Dockerfile
@@ -523,7 +525,7 @@ docker compose up mlflow
 
 ## Branch Strategy
 
-- `main` — production-ready
+- `master` — production-ready
 - `dev` — active development
 - Feature branches: `feat/training-pipeline`, `feat/inference-api`, etc.
 
