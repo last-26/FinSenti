@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     model_dir: str = "./models"
     hf_home: str = "./cache/huggingface"
 
+    # CORS
+    cors_origins: str = "http://localhost:3000"
+
     # Inference
     max_batch_size: int = 64
     max_text_length: int = 512
